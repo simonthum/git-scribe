@@ -43,6 +43,14 @@ For local generation (evenutally pushing to GitHub will handle gen for you), it 
 * source-highlight (3.1)
 * FOP (1.0) - for PDF generation
 
+Building
+========
+
+Use gem to build and install git-scribe.
+
+    $ gem build git-scribe.gemspec
+    $ gem install git-scribe-x.x.x.gem
+
 Usage
 =====
 
