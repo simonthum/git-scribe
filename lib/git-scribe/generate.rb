@@ -71,7 +71,13 @@ class GitScribe
         fopconfigparam = "-c #{fopconfig}"
       end
       
-      run_xslt "-o #{local('book.fo')} #{local('book.xml')} #{base('docbook-xsl/fo.xsl')}", java_options
+      xslfile = base('docbook-xsl/fo.xsl')
+      localxslfile = local('fo.xsl')
+      if File.exist?(localxslfile)
+        xslfile = localxslfile
+      end
+      
+      run_xslt "-o #{local('book.fo')} #{local('book.xml')} #{xslfile}", java_options
       ex "fop #{fopconfigparam} -fo #{local('book.fo')} -pdf #{local('book.pdf')}"
 
       if $?.success?
