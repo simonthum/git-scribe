@@ -64,8 +64,15 @@ class GitScribe
         'admon.textlabel'  => 1,
         'admon.graphics'   => 0,
       }
+      
+      fopconfig = local('fop.xconf')
+      fopconfigparam = ""
+      if File.exist?(fopconfig)
+        fopconfigparam = "-c #{fopconfig}"
+      end
+      
       run_xslt "-o #{local('book.fo')} #{local('book.xml')} #{base('docbook-xsl/fo.xsl')}", java_options
-      ex "fop -fo #{local('book.fo')} -pdf #{local('book.pdf')}"
+      ex "fop #{fopconfigparam} -fo #{local('book.fo')} -pdf #{local('book.pdf')}"
 
       if $?.success?
         'book.pdf'
