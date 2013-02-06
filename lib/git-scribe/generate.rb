@@ -367,11 +367,19 @@ class GitScribe
     end
 
     def run_xslt(jar_arguments, java_options)
+      jars = ["saxon.jar", "xslthl-2.0.2.jar", "resolver.jar"]
+      classpath = jars.map { |j| base("vendor/#{j}") }.join(classpath_delimiter)
       ex <<-SH
-        java -cp "#{base('vendor/saxon.jar')}#{classpath_delimiter}#{base('vendor/xslthl-2.0.2.jar')}" \
+        java -cp "#{classpath}" \
              -Dxslthl.config=file://"#{base('docbook-xsl/highlighting/xslthl-config.xml')}" \
              #{java_options.map { |k, v| "-D#{k}=#{v}" }.join(' ')} \
+             -Dxml.catalog.files="#{base("docbook-xsl/catalog.xml")}" \
+             -Dxml.catalog.staticCatalog=yes \
+             -Dxml.catalog.className=org.apache.xml.resolver.Resolver \
              com.icl.saxon.StyleSheet \
+             -x org.apache.xml.resolver.tools.ResolvingXMLReader \
+             -y org.apache.xml.resolver.tools.ResolvingXMLReader \
+             -r org.apache.xml.resolver.tools.CatalogResolver \
              #{jar_arguments}
       SH
     end
